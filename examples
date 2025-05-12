@@ -1,5 +1,6 @@
 for i in $(seq -w 1 20) ; do mkdir user$i ; done
 
+##1
 #!/bin/bash
 
 if [ $# -ne 1 ]; then
@@ -18,12 +19,26 @@ if [ "$muvelet" = "kioszt" ]; then
    for i in $(seq "$ettol" "$eddig")
    do
       udir="$(printf "user%02d" $i)"
+
       echo "User dir: $udir"
       echo "Masolas..."
       cp skeleton/README "$udir"
    done
 elif [ "$muvelet" = "torol" ]; then
    echo "Skeletonok torlese"
+echo "Elso felhasznalo szama:"
+   read ettol
+   echo "Utolso felhasznalo szama:"
+   read eddig
+   for i in $(seq "$ettol" "$eddig")
+   do
+      udir="$(printf "user%02d" $i)"
+
+      echo "User dir: $udir"
+      rm $udir/README
+   done
 else
    echo "Hibas muvelet. Lehetseges muveletek: kioszt, torol."
 fi
+
+##2
