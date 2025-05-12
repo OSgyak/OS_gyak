@@ -3,42 +3,72 @@ for i in $(seq -w 1 20) ; do mkdir user$i ; done
 ##1
 #!/bin/bash
 
-if [ $# -ne 1 ]; then
-   echo "1 parameter kell"
-   exit
-fi
+fmode=0
 
-muvelet="$1"
+if [ $# -eq 1 ]; then
+   echo "Intervallum mod."
+   muvelet="$1"
+elif [ $# -eq 2 ]; then
+   echo "Userlista mod"
+   fmode=1
+   muvelet="$1"
+   ulfile="$2"
+else
+   echo "Egy, vagy ket parameter kellene"
+   exit 1
+fi
 
 if [ "$muvelet" = "kioszt" ]; then
    echo "Skeletonok kiosztasa"
-   echo "Elso felhasznalo szama:"
-   read ettol
-   echo "Utolso felhasznalo szama:"
-   read eddig
-   for i in $(seq "$ettol" "$eddig")
-   do
-      udir="$(printf "user%02d" $i)"
 
-      echo "User dir: $udir"
-      echo "Masolas..."
-      cp skeleton/README "$udir"
-   done
+   if [ "$fmode" -eq 0 ]; then
+      echo "Elso felhasznalo szama:"
+      read ettol
+      echo "Utolso felhasznalo szama:"
+      read eddig
+
+      for i in $(seq "$ettol" "$eddig"); do
+         udir="$(printf "user%02d" $i)"
+         echo "User dir: $udir"
+         echo "Masolas..."
+         cp skeleton/README "$udir"
+      done
+   else
+      while read -r udir; do
+         echo "User dir: $udir"
+         echo "Masolas..."
+         cp skeleton/README "$udir"
+      done
+   fi
+
 elif [ "$muvelet" = "torol" ]; then
    echo "Skeletonok torlese"
-echo "Elso felhasznalo szama:"
-   read ettol
-   echo "Utolso felhasznalo szama:"
-   read eddig
-   for i in $(seq "$ettol" "$eddig")
-   do
-      udir="$(printf "user%02d" $i)"
 
-      echo "User dir: $udir"
-      rm $udir/README
-   done
+   if [ "$fmode" -eq 0 ]; then
+      echo "Elso felhasznalo szama:"
+      read ettol
+      echo "Utolso felhasznalo szama:"
+      read eddig
+
+      for i in $(seq "$ettol" "$eddig"); do
+         udir="$(printf "user%02d" $i)"
+         echo "User dir: $udir"
+         rm "$udir/README"
+      done
+   else
+      while read -r udir; do
+         echo "User dir: $udir"
+         rm "$udir/README"
+      done
+   fi
+
 else
    echo "Hibas muvelet. Lehetseges muveletek: kioszt, torol."
+   exit 1
 fi
+
+
 ##1pelda: .pZH2.sh torol userlista
+
+
 ##2
