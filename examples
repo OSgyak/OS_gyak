@@ -1,0 +1,21 @@
+for i in $(seq -w 1 20) ; do mkdir user$i ; done
+
+#!/bin/bash
+if [  $# -ne 1 ]
+then
+   echo "1 parameter kell"
+   exit
+fi
+
+muvelet="$1"
+
+if [ "$muvelet" = "kioszt" ]
+then
+   echo "Skeletonok kiosztasa"
+elif [ "$muvelet" = "torol" ]
+then
+   echo "Skeletonok torlese"
+else
+  echo "Hibas muvelet. Lehetseges muveletek: kioszt, torol."
+fi
+
