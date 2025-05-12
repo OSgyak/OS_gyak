@@ -73,3 +73,121 @@ fi
 
 ##2
 https://drive.google.com/drive/folders/1RAMslkLzp8YqW4nxHkLVQOW2-XubGC7I?usp=sharing
+
+
+
+#!/bin/bash
+
+fmode=0
+if [ $# -eq 1 ]
+then
+    echo "Intervallum mód"
+elif [ $# -eq 2 ]
+then
+    echo "Userlista mód"
+    fmode=1
+    ufile="$2"
+else
+    echo "Egy vagy két paraméter kellene"
+    exit
+fi
+
+muvelet="$1"
+
+if [ "$muvelet" = "kioszt" ]
+then
+    echo "Skeletonok kiosztása"
+    if [ $fmode -eq 0 ]
+    then
+        echo "Első felhasználó száma:"
+        read ettol
+        echo "Utolsó felhasználó száma:"
+        read eddig
+        for i in $(seq "$ettol" "$eddig")
+        do
+            udir=$(printf "user%02d" $i)
+            echo "User dir: $udir"
+            echo "Másolás..."
+            cp skeleton/README "$udir"
+        done
+    else
+        for udir in $(cat "$ufile")
+        do
+            echo "User dir: $udir"
+            cp skeleton/README "$udir"
+        done
+    fi
+
+elif [ "$muvelet" = "torol" ]
+then
+    echo "Skeletonok törlése"
+    if [ $fmode -eq 0 ]
+    then
+        echo "Első felhasználó száma:"
+        read ettol
+        echo "Utolsó felhasználó száma:"
+        read eddig
+        for i in $(seq "$ettol" "$eddig")
+        do
+            udir=$(printf "user%02d" $i)
+            echo "User dir: $udir"
+            rm "$udir/README"
+        done
+    else
+        for udir in $(cat "$ufile")
+        do
+            echo "User dir: $udir"
+            rm "$udir/README"
+        done
+    fi
+
+elif [ "$muvelet" = "ellenoriz" ]
+then
+    echo "Első felh."
+    read ettol
+    echo "Utolsó felh."
+    read eddig
+    for i in $(seq "$ettol" "$eddig")
+    do
+        udir=$(printf "user%02d" $i)
+        echo "Ellenőrzés: $udir"
+        if [ ! -d "$udir" ]
+        then
+            echo "  Hiányzó könyvtár"
+            continue
+        fi
+        ok=1
+        for sfn in $(ls skeleton)
+        do
+            if [ ! -f "$udir/$sfn" ]
+            then
+                echo "  $sfn hiányzik."
+                ok=0
+            fi
+        done
+        if [ "$ok" -eq 1 ]
+        then
+            echo "  OK"
+        fi
+    done
+
+elif [ "$muvelet" = "urese" ]
+then
+    echo "Üres könyvtárak ellenőrzése"
+    echo "Első:"
+    read ettol
+    echo "Utolsó:"
+    read eddig
+    for i in $(seq "$ettol" "$eddig")
+    do
+        udir=$(printf "user%02d" $i)
+        echo "$udir"
+        if [ -z "$(ls "$udir")" ]
+        then
+            echo "  Üres."
+        fi
+    done
+
+else
+    echo "Hibás művelet. Lehetséges műveletek: kioszt, torol, ellenoriz, urese."
+fi
