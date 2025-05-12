@@ -40,5 +40,5 @@ echo "Elso felhasznalo szama:"
 else
    echo "Hibas muvelet. Lehetseges muveletek: kioszt, torol."
 fi
-
+##1pelda: .pZH2.sh torol userlista
 ##2
